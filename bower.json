@@ -21,16 +21,16 @@
   "homepage": "https://github.com/polymerelements/app-localize-behavior",
   "ignore": [],
   "dependencies": {
-    "iron-ajax": "PolymerElements/iron-ajax#1 - 2",
+    "iron-ajax": "PolymerElements/iron-ajax#2",
     "intl-messageformat": "yahoo/intl-messageformat#^2.2.0",
-    "polymer": "Polymer/polymer#1.9 - 2"
+    "polymer": "Polymer/polymer#2"
   },
   "devDependencies": {
     "intl": "andyearnshaw/intl.js#^1.0.0",
-    "iron-component-page": "PolymerElements/iron-component-page#1 - 2",
-    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#1 - 2",
-    "paper-toggle-button": "PolymerElements/paper-toggle-button#1 - 2",
-    "paper-styles": "PolymerElements/paper-styles#1 - 2",
+    "iron-component-page": "PolymerElements/iron-component-page#3.0.1",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#2.0.0",
+    "paper-toggle-button": "PolymerElements/paper-toggle-button#2",
+    "paper-styles": "PolymerElements/paper-styles#2",
     "test-fixture": "PolymerElements/test-fixture#^3.0.0-rc.1",
     "web-component-tester": "^6.0.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
@@ -57,6 +57,7 @@
     }
   },
   "resolutions": {
-    "webcomponentsjs": "^1.0.0"
+    "webcomponentsjs": "^1.0.0",
+    "iron-doc-viewer": "^3.0.0"
   }
 }

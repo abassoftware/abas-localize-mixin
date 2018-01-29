@@ -8,7 +8,7 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../polymer/polymer-element.html">
 <link rel="import" href="../../paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../app-localize-behavior.html">
 <link rel="import" href="common-styles.html">
@@ -36,49 +36,65 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 
   <script>
-    Polymer({
-      is: "x-local-translate",
+    class XLocalTranslate extends Polymer.AppLocalizeBehavior(Polymer.Element) {
+      static get is() {
+        return "x-local-translate"
+      }
 
-      behaviors: [
-        Polymer.AppLocalizeBehavior
-      ],
+      static get properties() {
+        return {
+          /* Overriden from AppLocalizeBehavior */
+          language: {
+            value: 'en',
+            type: String
+          },
+          fallbackLanguage: {
+            value: 'en_US',
+            type: String
+          },
 
-      properties: {
-        /* Overriden from AppLocalizeBehavior */
-        language: {
-          value: 'en',
-          type: String
-        },
+          /* Overriden from AppLocalizeBehavior */
+          formats: {
+            type: Object,
+            value: function () {
+              return {
+                number: {
+                  USD: {
+                    style: 'currency',
+                    currency: 'USD'
+                  }
+                }
+              };
+            }
+          },
 
-        /* Overriden from AppLocalizeBehavior */
-        formats: {
-          type: Object,
-          value: function() {
-            return {
-              number: { USD: { style: 'currency', currency: 'USD' } }
-            };
-          }
-        },
-
-        /* Overriden from AppLocalizeBehavior */
-        resources: {
-          type: Object,
-          value: function() {
-            return {
-              'en': {
-                'greeting': 'Hello!'
-              },
-              'fr' : {
-                'greeting': 'Bonjour!'
-              }
-            };
+          /* Overriden from AppLocalizeBehavior */
+          resources: {
+            type: Object,
+            value: function () {
+              return {
+                'en': {
+                  'greeting': 'Hello!'
+                },
+                'fr': {
+                  'greeting': 'Bonjour!'
+                }
+              };
+            }
           }
         }
-      },
-
-      _toggle: function() {
-        this.language = this.$.switch.checked ? 'fr' : 'en';
       }
-    });
+
+      _toggle() {
+        this.dispatchEvent(new CustomEvent('app-localize-language-changed', {
+          detail: {
+            language: this.$.switch.checked ? 'fr' : 'en'
+          },
+          bubbles: true,
+          composed: true
+        }));
+      }
+    }
+    customElements.define(XLocalTranslate.is, XLocalTranslate);
   </script>
 </dom-module>

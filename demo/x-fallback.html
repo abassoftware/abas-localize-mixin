@@ -8,7 +8,7 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../polymer/polymer-element.html">
 <link rel="import" href="../../paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../app-localize-behavior.html">
 <link rel="import" href="common-styles.html">
@@ -23,11 +23,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <span title="french">FR 🇫🇷</span>
     </div>
 
-    <h4>This will fallback from FR to en_US and use this language, because there is no missing_translation key in french and fallbackLanguage is set to en_US</h4>
+    <h4>This will fallback from FR to en_US and use this language, because there is no missing_translation key in french and
+      fallbackLanguage is set to en_US</h4>
     <div class="snippet">
       <div class="demo">
 
-        <div>{{localize('missing_translation')}}</div>
+        <div>[[localize('missing_translation')]]</div>
       </div>
       <div class="code-container">
         <code>localize('missing_translation')
@@ -40,32 +41,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
   <script>
-    Polymer({
-      is: "x-fallback",
-
-      behaviors: [
-        Polymer.AppLocalizeBehavior
-      ],
-
-      properties: {
-        /* Overriden from AppLocalizeBehavior */
-        language: {
-          value: 'en',
-          type: String
-        },
-        fallbackLanguage: {
-          value: 'en_US',
-          type: String
-        }
-      },
-
-      attached: function() {
-        this.loadResources(this.resolveUrl('locales.json'));
-      },
-
-      _toggle: function() {
-        this.language = this.$.switch.checked ? 'fr' : 'en';
+    class XFallback extends Polymer.AppLocalizeBehavior(Polymer.Element) {
+      static get is() {
+        return "x-fallback"
       }
-    });
+
+      static get properties() {
+        return {
+          /* Overriden from AppLocalizeBehavior */
+          language: {
+            value: 'en',
+            type: String
+          },
+          fallbackLanguage: {
+            value: 'en_US',
+            type: String
+          }
+        }
+      }
+      
+      connectedCallback() {
+        super.connectedCallback();
+        this.loadResources(this.resolveUrl('locales.json'));
+      }
+
+      _toggle() {
+        this.dispatchEvent(new CustomEvent('app-localize-language-changed', {
+          detail: {
+            language: this.$.switch.checked ? 'fr' : 'en'
+          },
+          bubbles: true,
+          composed: true
+        }));
+      }
+    }
+    customElements.define(XFallback.is, XFallback);
   </script>
 </dom-module>

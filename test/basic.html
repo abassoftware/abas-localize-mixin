@@ -91,19 +91,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script>
     function getRequestsCache(elem) {
-      return elem.constructor.prototype.__localizationCache.requests;
+      return elem.__localizationCache.requests;
     }
 
     function getStringsCache(elem) {
-      return elem.constructor.prototype.__localizationCache.messages;
+      return elem.__localizationCache.messages;
     }
 
     function resetRequestsCache(elem) {
-      elem.constructor.prototype.__localizationCache.requests = {};
+      elem.__localizationCache.requests = {};
     }
 
     function resetStringsCache(elem) {
-      elem.constructor.prototype.__localizationCache.messages = {};
+      elem.__localizationCache.messages = {};
     }
 
 
@@ -352,7 +352,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         assert.equal(0, Object.keys(getRequestsCache(app1)).length);
         assert.equal(0, Object.keys(getRequestsCache(app2)).length);
         assert.equal(0, Object.keys(getRequestsCache(app3)).length);
-
         // Once the first file has been loaded, it should be the only thing in the cache.
         app1.addEventListener('app-localize-resources-loaded', function() {
           assert.equal(1, Object.keys(getRequestsCache(app1)).length, 'there is 1 request cached in app1');
