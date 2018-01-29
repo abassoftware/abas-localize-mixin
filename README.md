@@ -14,12 +14,6 @@ thing! https://github.com/PolymerLabs/tedium/issues
 
 [![Build status](https://travis-ci.org/toshovski/app-localize-behavior.svg?branch=master)](https://travis-ci.org/PolymerElements/app-localize-behavior)
 
-
-This is a fork of the AppLocalizeBehavior. There are some improved features:
-
-  * Support of structured files
-  * fallback Language
-
 ## Polymer.AppLocalizeBehavior
 
 `Polymer.AppLocalizeBehavior` wraps the [format.js](http://formatjs.io/) library to
@@ -36,61 +30,90 @@ Sample application loading resources from an external file:
 
 ```html
 <dom-module id="x-app">
-   <template>
-    <div>{{localize('hello', 'name', 'Batman')}}</div>
-   </template>
-   <script>
-      Polymer({
-        is: "x-app",
-
-        behaviors: [
-          Polymer.AppLocalizeBehavior
-        ],
-
-        properties: {
-          language: {
-            value: 'en'
-          },
-        }
-
-        attached: function() {
-          this.loadResources(this.resolveUrl('locales.json'));
-        },
-      });
-   &lt;/script>
-</dom-module>
+  <template>
+    <div>[[localize('hello', 'name', 'Batman')]]</div>
+  </template>
+  <script>
+  class XApp extends Polymer.AppLocalizeBehavior(Polymer.Element) {
+    static get is() {
+      return "x-app"
+    }
+   
+   static get properties() {
+     return {
+       language: {
+         value: 'en'
+       }
+     }   
+   }
+   
+   connectedCallback() {
+     super.connectedCallback();  
+     this.loadResources(this.resolveUrl('locales.json'));
+   }
+ }
+ customElements.define(XApp.is, XApp);
+ &lt;/script>
+ </dom-module>
 ```
 
 Alternatively, you can also inline your resources inside the app itself:
 
 ```html
 <dom-module id="x-app">
-   <template>
-    <div>{{localize('hello', 'name', 'Batman')}}</div>
-   </template>
-   <script>
-      Polymer({
-        is: "x-app",
-
-        behaviors: [
-          Polymer.AppLocalizeBehavior
-        ],
-
-        properties: {
-          language: {
-            value: 'en'
-          },
-          resources: {
-            value: function() {
-              return {
-                'en': { 'hello': 'My name is {name}.' },
-                'fr': { 'hello': 'Je m\'apelle {name}.' }
-              }
-          }
-        }
-      });
-   &lt;/script>
-</dom-module>
+  <template>
+    <div>[[localize('hello', 'name', 'Batman')]]</div>
+  </template>
+  <script>
+  class XApp extends Polymer.AppLocalizeBehavior(Polymer.Element) {
+    static get is() {
+      return "x-app"
+    }
+   
+   static get properties() {
+     return {
+       language: {
+         value: 'en'
+       },
+       resources: {
+         value: function() {
+           return {
+             'en': { 'hello': 'My name is {name}.' },
+             'fr': { 'hello': 'Je m\'apelle {name}.' }
+           }
+         }
+       }
+     }   
+   }
+   
+   connectedCallback() {
+     super.connectedCallback();  
+     this.loadResources(this.resolveUrl('locales.json'));
+   }
+ }
+ customElements.define(XApp.is, XApp);
+ &lt;/script>
+ </dom-module>
 ```
 
+###Fallback Language
+This language is used when no translation is found for default language.
+
+###Stuctured Files
+The resouce file can also have a deep structure for instace:
+
+```JSON
+"en": {
+  "welcome": {
+    "polite": "Welcome Sir!",
+    "normal": "Welcome!"
+  }
+}
+```
+
+You can access these structures by extending you translation key with :.
+
+```HTML
+<div>{{localize('welcome:polite')}}</div>
+```
 
