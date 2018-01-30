@@ -129,7 +129,54 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      *     //change fallbackLanguage
      *     this.dispatchEvent(new CustomEvent('app-localize-fallback-language-changed'), {detail: {fallbackLanguage: 'fr'}})
      *
+     * Fallback Language:
+     * This language is used when no translation is found for default language.
+     *
+     * Stuctured Files:
+     * The resouce file can also have a deep structure for instace:
+
+     * ```JSON
+     * "en": {
+     *   "welcome": {
+     *     "polite": "Welcome Sir!",
+     *     "normal": "Welcome!"
+     *   }
+     * }
+     *  ```
+     *
+     * You can access these structures by extending you translation key with :
+     *
+     * ```HTML
+     * <div>{{localize('welcome:polite')}}</div>
+     * ```
      * 
+     * This repo wraps Format.js which means you should use a Language Key specific 
+     * to a region to have everything formated for that region for instance en_US and en_UK. 
+     * But this can get out of hands very quickly. Thats why this behavior fallsback to the language 
+     * when region specific does not provide a result. With this you can only use region in your 
+     * locales.json when needed:
+     * 
+     * ```JSON
+     * "en": {
+     *   "welcome": "Welcome" 
+     * },
+     * "en_US": {
+     *   "color": "color" 
+     * }
+     * "en_UK": {
+     *   "color": "colour" 
+     * }
+     * ```
+     * 
+     * ```JavaScript
+     * language = 'en_US';
+     * localize("welcome"); //Welcome
+     * localize("color");  //color
+     * language = 'en_UK';
+     * localize("welcome"); //Welcome
+     * localize("color"); //colour
+     * ```
+     *
      * @demo demo/index.html
      * @polymer
      * @mixinFunction
@@ -348,10 +395,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               // Cache the key/value pairs for the same language, so that we don't
               // do extra work if we're just reusing strings across an application.
               var translatedValue = this.__findTranslatedValue(resources, language, key);
+              //No Value try without region
+              if(!translatedValue && this.__hasRegion(language)) {
+                translatedValue = this.__findTranslatedValue(resources, this.__removeRegion(language), key);
+              }
               //use fallback key if provided
               if (!translatedValue && fallbackLanguage) {
                 translatedValue = this.__findTranslatedValue(resources, fallbackLanguage, key)
               }
+
+              //Still no Value? try fallbackLanguage without region
+              if(!translatedValue && this.__hasRegion(fallbackLanguage)) {
+                translatedValue = this.__findTranslatedValue(resources, this.__removeRegion(fallbackLanguage), key);
+              }
+
 
               if (!translatedValue) {
                 return this.useKeyIfMissing ? key : '';
@@ -445,6 +502,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 ajax: null
               };
             }
+          }
+          __removeRegion(languageKey) {
+            if(languageKey.indexOf('_') != -1) {
+              return languageKey.split('_')[0];
+            }
+            if(languageKey.indexOf('-') != -1) {
+              return languageKey.split('-')[0];
+            }
+            return languageKey;
+          }
+
+          __hasRegion(languageKey) {
+            return languageKey.indexOf('_') != -1 || languageKey.indexOf('-') != -1
           }
         }
         return AppLocalizeBehavior;

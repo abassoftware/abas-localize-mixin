@@ -96,10 +96,10 @@ Alternatively, you can also inline your resources inside the app itself:
  </dom-module>
 ```
 
-###Fallback Language
+### Fallback Language
 This language is used when no translation is found for default language.
 
-###Stuctured Files
+### Stuctured Files
 The resouce file can also have a deep structure for instace:
 
 ```JSON
@@ -117,3 +117,36 @@ You can access these structures by extending you translation key with :.
 <div>{{localize('welcome:polite')}}</div>
 ```
 
+### Language Changed Event
+Using this component in an Structured Polymer app it can get anoying to bind language property downwards.
+Alternatively to oneway downwards binding you can fire an event that will be caugt by this behavior.
+    
+    //change language
+    this.dispatchEvent(new CustomEvent('app-localize-language-changed'), {detail: {language: 'fr'}})
+    //change fallbackLanguage
+    this.dispatchEvent(new CustomEvent('app-localize-fallback-language-changed'), {detail: {fallbackLanguage: 'fr'}})
+
+This repo wraps Format.js which means you should use a Language Key specific 
+to a region to have everything formated for that region for instance en_US and en_UK. 
+But this can get out of hands very quickly. Thats why this behavior fallsback to the language 
+when region specific does not provide a result. With this you can only use region in your 
+locales.json when needed:
+
+```JSON
+"en": {
+  "welcome": "Welcome" 
+},
+"en_US": {
+  "color": "color" 
+}
+"en_UK": {
+  "color": "colour" 
+}
+```JavaScript
+language = 'en_US';
+localize("welcome");// Welcome
+localize("color"); // color
+language = 'en_UK';
+localize("welcome"); // Welcome
+localize("color"); // colour
+```
