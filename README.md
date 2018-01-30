@@ -126,6 +126,7 @@ Alternatively to oneway downwards binding you can fire an event that will be cau
     //change fallbackLanguage
     this.dispatchEvent(new CustomEvent('app-localize-fallback-language-changed'), {detail: {fallbackLanguage: 'fr'}})
 
+### Region fallback
 This repo wraps Format.js which means you should use a Language Key specific 
 to a region to have everything formated for that region for instance en_US and en_UK. 
 But this can get out of hands very quickly. Thats why this behavior fallsback to the language 
@@ -142,6 +143,8 @@ locales.json when needed:
 "en_UK": {
   "color": "colour" 
 }
+```
+
 ```JavaScript
 language = 'en_US';
 localize("welcome");// Welcome
