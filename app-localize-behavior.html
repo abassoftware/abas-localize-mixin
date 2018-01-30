@@ -386,9 +386,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
             this.__localizationCache.messages = {};
 
+            if (!resources || !language)
+                return;
+
             return function () {
               var key = arguments[0];
-              if (!key || !resources || !language || !resources[language])
+              if (!key || !resources || !language)
                 return;
 
 
