@@ -9,7 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../../polymer/polymer-element.html">
-<link rel="import" href="../app-localize-behavior.html">
+<link rel="import" href="../abas-localize-mixin.html">
 
 <dom-module id="x-translate-l10n">
   <template>
@@ -17,7 +17,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 
   <script>
-    class XTranslateI18n extends Polymer.AppLocalizeBehavior(Polymer.Element) {
+    class XTranslateI18n extends Polymer.AbasLocalizeMixin(Polymer.Element) {
       static get is() {
         return "x-translate-l10n";
       }
